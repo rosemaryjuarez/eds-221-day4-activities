@@ -1,0 +1,151 @@
+---
+title: part 1
+---
+
+```{r}
+library(tidyverse)
+```
+
+## **Part 1. For loops revisited**
+
+### **Task 1**
+
+Create two sequences, one called `weekdays` that contains days of the week (\"Monday\", \"Tuesday\", \"Wednesday\", etc.) and one called `transects` that contains the series of transect names \"Transect A\", \"Transect B,\"Transect C\". Write a nested for loop that creates a matrix containing the following:
+
+|                        |                        |                        |
+|:-----------------------|:-----------------------|:-----------------------|
+| Monday - Transect A    | Monday - Transect B    | Monday - Transect C    |
+| Tuesday - Transect A   | Tuesday - Transect B   | Tuesday - Transect C   |
+| Wednesday - Transect A | Wednesday - Transect B | Wednesday - Transect C |
+| Thursday - Transect A  | Thursday - Transect B  | Thursday - Transect C  |
+| Friday - Transect A    | Friday - Transect B    | Friday - Transect C    |
+| Saturday - Transect A  | Saturday - Transect B  | Saturday - Transect C  |
+| Sunday - Transect A    | Sunday - Transect B    | Sunday - Transect C    |
+
+```{r}
+weekdays <- c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')
+
+transects <- c('Transect A', 'Transect B', 'Transect C')
+
+```
+
+write a nested for loop
+
+```{r}
+wt_matrix <- matrix(nrow = length(weekdays), ncol = length(transects))
+
+for (i in seq_along(weekdays)) {
+  for (j in seq_along(transects)) {
+    input = print(paste(weekdays[i],'-', transects[j]))
+    wt_matrix[i, j] <- input
+  }
+}
+
+View(wt_matrix)
+```
+
+### **Task 2**
+
+Write a function called `force` that calculates a force (in Newtons), given inputs of mass (in kg) and acceleration (in ms2��2 (recall: F=ma�=��), and returns a statement \"The resulting force is \_\_\_ Newtons.\"
+
+```{r}
+force <- function(mass, acceleration) {
+  result <- mass * acceleration
+  print(paste('The resulting force is', result, 'Newtons.' ))
+}
+
+force(23, 2)
+```
+
+### **Task 3**
+
+The length:weight relationship for fish is: W=aLb�=���, where where L is total fish length (centimeters), W is the expected fish weight (grams), and a and b are species-dependent parameter values (shown below for several fish from Peyton et al. 2016).
+
+| sci_name            | common_name     |  a_est | b_est |
+|:--------------------|:----------------|-------:|------:|
+| Chanos chanos       | Milkfish        | 0.0905 |  2.52 |
+| Sphyraena barracuda | Great barracuda | 0.0181 |  3.27 |
+| Caranx ignobilis    | Giant trevally  | 0.0353 |  3.05 |
+
+Recreate the table above as a data frame stored as `fish_parms`. Then, write a function called `fish_weight` that allows a user to only enter the *common name* (argument `fish_name`) and *total length* (argument `tot_length`) (in centimeters) of a fish, to return the expected fish weight in grams. Test it out for different species and lengths.
+
+Now, try creating a vector of lengths (e.g. 0 to 100, by increments of 1) and ensuring that your function will calculate the fish weight over a *range* of lengths for the given species (try this for milkfish, storing the output weights as `milkfish_weights`.
+
+```{r}
+fish_parms <- data.frame(sci_name = c('Chanos chanos', 'Sphyraena barracuda', 'Caranx ignobilis'), common_name = c('Milkfish', 'Great barracuda', 'Giant trevally'), a_est = c(0.0905, 0.0181, 0.0353), b_est = c(2.52, 3.27, 3.05))
+```
+
+```{r}
+filter(fish_parms, common_name == 'Milkfish')
+```
+
+```{r}
+fish_weight <- function(fish_name, tot_length){
+  x <- filter(fish_parms, common_name == fish_name)
+  x$a_est * (tot_length^ x$b_est)
+}
+```
+
+```{r}
+fish_weight('Milkfish', 7)
+```
+
+Now, try creating a vector of lengths (e.g. 0 to 100, by increments of 1) and ensuring that your function will calculate the fish weight over a *range* of lengths for the given species (try this for milkfish, storing the output weights as `milkfish_weights`.
+
+```{r}
+vec_fish <- seq(0, 100, by = 1)
+
+milkfish_weights <- fish_weight('Milkfish', vec_fish)
+
+view(milkfish_weights)
+```
+
+Wave power (more accurately wave energy flux) in deep water is approximated by:
+
+Pdeep=0.5H2T�����=0.5�2�
+
+0.5H\^2T
+
+where P� is power in kWm��� (potential power per wave meter), H� is wave height in meters (more specifically, the *significant wave height*), and T� is the wave period in seconds. Learn more [**here**](https://en.wikipedia.org/wiki/Wave_power).
+
+Write a function called `wave_power` that calculates potential ocean wave power given inputs of wave height and period.
+
+Use your `wave_power` function to approximate wave power for a period of 8 seconds, over a range of wave heights from 0 to 3 meters by increments of 0.2 meters.
+
+```{r}
+wave_power <- function(wave_height, period) {
+  0.5 * (wave_height^2) * period
+}
+```
+
+```{r}
+wave_seq <- seq(0, 3, by = 0.2)
+
+wave_power(wave_seq, 8)
+```
+
+The wave energy equation changes based on ocean depth. Along the coast of Brenville, which has a very sharp shelf as the wave approaches the coast, wave energy is approximated using the deep ocean equation (the one you used above) for depths \> 12 meters, and a shallow equation for depths \<= 12 meters. The Brenville team estimates shallow wave power by:
+
+Pshallow=0.81H2T��ℎ�����=0.81�2�
+
+.81H\^2T
+
+Create a function that requires inputs of water depth, wave height and period, then returns the approximated wave power using the correct equation for the depth entered. It should also include a message (hint: use `message()` just like you would use warning!) that lets the user know if the shallow or deep water equation was used.
+
+```{r}
+wave_fun <- function(water_depth, wave_height, period) {
+  if (water_depth > 12) {
+    message('This is deep water equation, are u sure?')
+    0.5 * (wave_height^2) * period
+    
+  } else {
+    message('this is a shallow water equation, are you sure?')
+    .81 * (wave_height^2) * period
+    
+  }
+}
+```
+
+```{r}
+wave_fun(13, 3, 8)
+```
