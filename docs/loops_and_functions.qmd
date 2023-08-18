@@ -10,7 +10,7 @@ library(tidyverse)
 
 ### **Task 1**
 
-Create two sequences, one called `weekdays` that contains days of the week (\"Monday\", \"Tuesday\", \"Wednesday\", etc.) and one called `transects` that contains the series of transect names \"Transect A\", \"Transect B,\"Transect C\". Write a nested for loop that creates a matrix containing the following:
+Create two sequences, one called `weekdays` that contains days of the week ("Monday", "Tuesday", "Wednesday", etc.) and one called `transects` that contains the series of transect names "Transect A", "Transect B,"Transect C". Write a nested for loop that creates a matrix containing the following:
 
 |                        |                        |                        |
 |:-----------------------|:-----------------------|:-----------------------|
@@ -46,7 +46,7 @@ View(wt_matrix)
 
 ### **Task 2**
 
-Write a function called `force` that calculates a force (in Newtons), given inputs of mass (in kg) and acceleration (in ms2��2 (recall: F=ma�=��), and returns a statement \"The resulting force is \_\_\_ Newtons.\"
+Write a function called `force` that calculates a force (in Newtons), given inputs of mass (in kg) and acceleration (in ms2��2 (recall: F=ma�=��), and returns a statement "The resulting force is \_\_\_ Newtons."
 
 ```{r}
 force <- function(mass, acceleration) {
